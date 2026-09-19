@@ -1,6 +1,39 @@
 (()=>{const sb=window.supabaseClient,$=id=>document.getElementById(id);
-async function state(){let {data:{user}}=await sb.auth.getUser();$("authLoggedIn")?.classList.toggle("hidden",!user);$("authLoggedOut")?.classList.toggle("hidden",!!user);if(user){if($("userEmail"))$("userEmail").textContent=user.email;if($("authText"))$("authText").textContent="Conta ligada à ASTRA."}}
-$("loginBtn")&&( $("loginBtn").onclick=async()=>{let r=await sb.auth.signInWithPassword({email:$("authEmail").value.trim(),password:$("authPassword").value});$("authStatus").textContent=r.error?r.error.message:"Sessão iniciada.";if(!r.error)location.href="app.html"});
-$("signupBtn")&&( $("signupBtn").onclick=async()=>{let r=await sb.auth.signUp({email:$("authEmail").value.trim(),password:$("authPassword").value,options:{data:{full_name:$("authName")?.value||""}}});$("authStatus").textContent=r.error?r.error.message:"Conta criada. Confirma o email se for solicitado."});
-$("logoutBtn")&&( $("logoutBtn").onclick=async()=>{await sb.auth.signOut();location.reload()});state();
+async function route(user){
+ const q=await sb.from("profiles").select("is_super_admin").eq("id",user.id).single();
+ location.href=q.data?.is_super_admin?"admin.html":"app.html";
+}
+async function state(){
+ const {data:{user}}=await sb.auth.getUser();
+ $("authLoggedIn")?.classList.toggle("hidden",!user);
+ $("authLoggedOut")?.classList.toggle("hidden",!!user);
+ if(user){if($("userEmail"))$("userEmail").textContent=user.email||"";if($("authText"))$("authText").textContent="Sessão iniciada."}
+}
+$("loginBtn")?.addEventListener("click",async()=>{
+ const email=$("loginEmail").value.trim(),password=$("loginPassword").value,status=$("loginStatus");
+ if(!email||!password){status.textContent="Preenche o email e a password.";return}
+ status.textContent="A entrar…";
+ const r=await sb.auth.signInWithPassword({email,password});
+ if(r.error){status.textContent="Email ou password incorretos.";return}
+ await route(r.data.user);
+});
+$("loginPassword")?.addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
+$("openSignup")?.addEventListener("click",()=>{$("signupStatus").textContent="";$("signupDialog").showModal()});
+$("closeSignup")?.addEventListener("click",()=>$("signupDialog").close());
+$("signupBtn")?.addEventListener("click",async()=>{
+ const name=$("signupName").value.trim(),email=$("signupEmail").value.trim(),password=$("signupPassword").value,password2=$("signupPassword2").value,status=$("signupStatus");
+ if(name.split(/\s+/).filter(Boolean).length<2){status.textContent="Indica o teu nome completo.";return}
+ if(!email){status.textContent="Indica o teu email.";return}
+ if(password.length<6){status.textContent="A password deve ter pelo menos 6 caracteres.";return}
+ if(password!==password2){status.textContent="As passwords não coincidem.";return}
+ status.textContent="A criar conta…";
+ const r=await sb.auth.signUp({email,password,options:{data:{full_name:name}}});
+ if(r.error){status.textContent=r.error.message;return}
+ // Trigger creates profile; explicitly sync name when a session is immediately available.
+ if(r.data.user&&r.data.session)await sb.from("profiles").update({full_name:name,updated_at:new Date().toISOString()}).eq("id",r.data.user.id);
+ if(r.data.session){status.textContent="Conta criada.";setTimeout(()=>route(r.data.user),500)}
+ else status.textContent="Conta criada. Confirma o email que enviámos para entrares.";
+});
+$("logoutBtn")?.addEventListener("click",async()=>{await sb.auth.signOut();location.reload()});
+state();
 })();

@@ -10,7 +10,13 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<main class="app">
+<main class="app"><div class="astraOfficialLogo" aria-label="ASTRA — O teu dia nos astros">
+<img src="assets/astra-logo.webp" alt="ASTRA — O teu dia nos astros">
+</div><div class="languagePicker" aria-label="Idioma / Language / Idioma">
+<button type="button" data-lang="pt" title="Português"><span>🇵🇹</span><b>Português</b></button>
+<button type="button" data-lang="en" title="English"><span>🇬🇧</span><b>English</b></button>
+<button type="button" data-lang="es" title="Español"><span>🇪🇸</span><b>Español</b></button>
+</div>
   <header class="brand">
     <div class="moon">☾</div><h1>ASTRA</h1><p>O teu dia nos astros</p>
   </header>
@@ -19,9 +25,9 @@
     <span class="eyebrow">COMEÇAR</span>
     <h2>Descobre o teu dia</h2>
     <p class="muted">A versão gratuita dá-te um resumo diário de Amor, Trabalho e Saúde & bem-estar.</p>
-    <label>Nome<input id="name" placeholder="O teu nome" autocomplete="name"></label>
-    <label>Data de nascimento<input id="birth" type="date"></label>
-    <button id="save" class="primary">Continuar ✨</button>
+    <label><span data-i18n="fullName">Nome completo</span><input id="name" placeholder="Nome e apelido" data-i18n-placeholder="namePH" autocomplete="name"></label>
+    <label><span data-i18n="birth">Data de nascimento</span><input id="birth" type="date" autocomplete="bday"></label>
+    <button id="save" class="primary"><span data-i18n="continue">Continuar ✨</span></button>
   </section>
 
   <section id="home" class="hidden">
@@ -56,7 +62,7 @@
         <div>✦<span>Dinheiro</span><b>Premium</b></div>
         <div>⌂<span>Família</span><b>Premium</b></div>
       </div>
-      <div class="price"><strong>0,99 €</strong><span>/ mês</span></div>
+      <div class="price"><strong>1,99 €</strong><span>/ mês</span></div>
       <button id="premiumBtn" class="premiumButton">Ver demonstração Premium</button>
       <small>Pagamento ainda não ativo nesta versão de demonstração.</small>
       <div id="premiumDemo" class="premiumDemo hidden">
@@ -139,17 +145,21 @@
   </dialog>
 
   <div id="toast" class="toast hidden"></div>
-<footer class="devFooter"><a href="admin.html">Super Admin · Demo v0.6</a></footer><section class="card accountCard" id="accountCard">
+<footer class="devFooter"></footer><section class="card accountCard" id="accountCard">
   <span class="eyebrow">CONTA ASTRA</span>
   <h2 id="authTitle">Guarda o teu mapa nas estrelas</h2>
   <p class="muted" id="authText">Cria uma conta para sincronizar o teu perfil, consultas e Premium.</p>
   <div id="authLoggedOut">
-    <input id="authName" type="text" placeholder="O teu nome">
-    <input id="authEmail" type="email" placeholder="Email" autocomplete="email">
-    <input id="authPassword" type="password" placeholder="Password (mín. 6 caracteres)" autocomplete="current-password">
-    <div class="authActions"><button class="primary" id="loginBtn" type="button">Entrar</button><button class="premiumButton" id="signupBtn" type="button">Criar conta</button></div>
+  <div class="authLoginBox">
+    <h3><span data-i18n="loginTitle">Entrar na Conta ASTRA</span></h3>
+    <label><span data-i18n="email">Email</span><input id="loginEmail" type="email" autocomplete="email" placeholder="teu@email.pt"></label>
+    <label><span data-i18n="password">Password</span><input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••"></label>
+    <button id="loginBtn" class="primary"><span data-i18n="enter">Entrar</span></button>
+    <p id="loginStatus" class="muted"></p>
+    <p class="createPrompt"><span data-i18n="noAccount">Ainda não tens conta?</span> <button id="openSignup" class="textButton" type="button"><span data-i18n="create">Criar conta</span></button></p>
   </div>
-  <div id="authLoggedIn" class="hidden">
+</div>
+<div id="authLoggedIn" class="hidden">
     <div class="userPill"><span>✦</span><div><small>SESSÃO ATIVA</small><b id="userEmail"></b></div></div>
     <button class="premiumButton" id="logoutBtn" type="button">Terminar sessão</button>
   </div>
@@ -159,6 +169,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-config.js"></script>
 <script src="auth.js"></script>
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 <script>if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js')</script>
-</body></html>
+<dialog id="signupDialog">
+  <div class="dialogCard">
+    <button id="closeSignup" class="close" type="button">×</button>
+    <div class="eyebrow">CONTA ASTRA</div>
+    <h2 data-i18n="createTitle">Criar conta ✦</h2>
+    <p class="muted"><span data-i18n="createInfo">Cria a tua conta para guardar o teu perfil e as tuas leituras.</span></p>
+    <label><span data-i18n="fullName">Nome completo</span><input id="signupName" type="text" autocomplete="name" placeholder="Nome e apelido" data-i18n-placeholder="namePH"></label>
+    <label><span data-i18n="email">Email</span><input id="signupEmail" type="email" autocomplete="email" placeholder="teu@email.pt"></label>
+    <label><span data-i18n="password">Password</span><input id="signupPassword" type="password" autocomplete="new-password" placeholder="Mínimo 6 caracteres"></label>
+    <label><span data-i18n="confirmPassword">Confirmar password</span><input id="signupPassword2" type="password" autocomplete="new-password" placeholder="Repete a password" data-i18n-placeholder="repeatPassword"></label>
+    <button id="signupBtn" class="primary" type="button"><span data-i18n="create">Criar conta</span></button>
+    <p id="signupStatus" class="muted"></p>
+  </div>
+</dialog></body></html>
