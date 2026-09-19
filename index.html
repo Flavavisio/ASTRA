@@ -21,73 +21,9 @@
     <div class="moon">☾</div><h1>ASTRA</h1><p>O teu dia nos astros</p>
   </header>
 
-  <section id="setup" class="card">
-    <span class="eyebrow">COMEÇAR</span>
-    <h2>Descobre o teu dia</h2>
-    <p class="muted">A versão gratuita dá-te um resumo diário de Amor, Trabalho e Saúde & bem-estar.</p>
-    <label><span data-i18n="fullName">Nome completo</span><input id="name" placeholder="Nome e apelido" data-i18n-placeholder="namePH" autocomplete="name"></label>
-    <label><span data-i18n="birth">Data de nascimento</span><input id="birth" type="date" autocomplete="bday"></label>
-    <button id="save" class="primary"><span data-i18n="continue">Continuar ✨</span></button>
-  </section>
+  
 
-  <section id="home" class="hidden">
-    <div class="card hero">
-      <button id="editProfile" class="iconBtn" aria-label="Editar perfil">⚙︎</button>
-      <small id="date"></small><h2 id="hello"></h2><div id="sign" class="sign"></div>
-      <p id="dailyIntro" class="dailyIntro"></p>
-      <button id="consult" class="primary">Ver o meu dia ✨</button>
-      <p id="limit" class="muted center">1 consulta gratuita por dia</p>
-      <div id="countdown" class="countdown hidden"></div>
-    </div>
-
-    <div id="reading" class="hidden">
-      <div class="sectionTitle"><span>✦</span><h2>O teu dia</h2><span>✦</span></div>
-      <article class="reading"><span>❤️</span><div><h3>Amor</h3><p id="love"></p></div></article>
-      <article class="reading"><span>💼</span><div><h3>Trabalho</h3><p id="work"></p></div></article>
-      <article class="reading"><span>🌿</span><div><h3>Saúde & bem-estar</h3><p id="health"></p></div></article>
-      <p class="disclaimer">Conteúdo de entretenimento e bem-estar geral. Não substitui aconselhamento médico, financeiro ou profissional.</p>
-    </div>
-
-    <section class="card premium">
-      <span class="premiumBadge">✦ ASTRA PREMIUM</span>
-      <h2>Conhece o teu mapa pessoal</h2>
-      <p>Desbloqueia uma leitura mais completa e consulta outras datas.</p>
-      <div class="premiumGrid">
-        <div>☉<span>Signo solar</span><b>Incluído</b></div>
-        <div>↗<span>Ascendente</span><b>Premium</b></div>
-        <div>↘<span>Descendente</span><b>Premium</b></div>
-        <div>☾<span>Signo lunar</span><b>Premium</b></div>
-        <div>♡<span>Amor detalhado</span><b>Premium</b></div>
-        <div>◷<span>Outras datas</span><b>Premium</b></div>
-        <div>✦<span>Dinheiro</span><b>Premium</b></div>
-        <div>⌂<span>Família</span><b>Premium</b></div>
-      </div>
-      <div class="price"><strong>1,99 €</strong><span>/ mês</span></div>
-      <button id="premiumBtn" class="premiumButton">Ver demonstração Premium</button>
-      <small>Pagamento ainda não ativo nesta versão de demonstração.</small>
-      <div id="premiumDemo" class="premiumDemo hidden">
-        <div class="dateChooser">
-          <label>Consultar outra data <input id="premiumDate" type="date"></label>
-          <button id="readDate" class="miniBtn">Ver esta data ✦</button>
-          <p id="selectedDateLabel" class="muted"></p>
-        </div>
-        <div class="premiumHead"><span>✦ LEITURA PREMIUM</span><button id="closePremium" class="miniBtn">Fechar</button></div>
-        <div id="premiumMissing" class="premiumNotice"></div>
-        <div class="premiumReading"><h3>❤️ Amor</h3><p id="pLove"></p></div>
-        <div class="premiumReading"><h3>💼 Trabalho</h3><p id="pWork"></p></div>
-        <div class="premiumReading"><h3>💰 Dinheiro</h3><p id="pMoney"></p></div>
-        <div class="premiumReading"><h3>⌂ Família</h3><p id="pFamily"></p></div>
-        <div class="premiumReading"><h3>🌿 Bem-estar</h3><p id="pHealth"></p></div>
-        <div class="astroMap">
-          <h3>✦ O teu mapa pessoal</h3>
-          <div><span>☉ Signo solar</span><b id="sunOut">—</b></div>
-          <div><span>↗ Ascendente</span><b id="ascOut">—</b></div>
-          <div><span>↘ Descendente</span><b id="descOut">—</b></div>
-          <div><span>☾ Lua</span><b id="moonOut">—</b></div>
-          <p id="astroStatus" class="astroStatus"></p>
-        </div>
-      </div>
-    </section>
+  
   </section>
 
   <dialog id="profileDialog">
@@ -147,11 +83,14 @@
   <div id="toast" class="toast hidden"></div>
 <footer class="devFooter"></footer><section class="card accountCard" id="accountCard">
   <span class="eyebrow">CONTA ASTRA</span>
-  <h2 id="authTitle">Guarda o teu mapa nas estrelas</h2>
-  <p class="muted" id="authText">Cria uma conta para sincronizar o teu perfil, consultas e Premium.</p>
+  <h2 id="authTitle"><span data-i18n="accountTitle">Cria a tua Conta ASTRA</span></h2>
+  <p class="muted" id="authText"><span data-i18n="accountInfo">Cria uma conta gratuita e recebe a tua consulta diária ASTRA. Tens 1 consulta grátis por dia e, quando quiseres, podes avançar para o Premium para desbloquear o mapa astral e leituras mais completas.</span></p>
   <div id="authLoggedOut">
   <div class="authLoginBox">
-    <h3><span data-i18n="loginTitle">Entrar na Conta ASTRA</span></h3>
+    <h3><div class="freeAccountCallout">
+<span class="freeBadge">GRÁTIS</span>
+<div><strong data-i18n="freeDaily">1 consulta gratuita por dia</strong><small data-i18n="freeOptional">Cria a tua conta sem custos. O Premium é opcional.</small></div>
+</div><span data-i18n="loginTitle">Entrar na Conta ASTRA</span></h3>
     <label><span data-i18n="email">Email</span><input id="loginEmail" type="email" autocomplete="email" placeholder="teu@email.pt"></label>
     <label><span data-i18n="password">Password</span><input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••"></label>
     <button id="loginBtn" class="primary"><span data-i18n="enter">Entrar</span></button>
