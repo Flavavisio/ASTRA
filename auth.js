@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded",()=>{
 (()=>{const sb=window.supabaseClient,$=id=>document.getElementById(id);
 async function route(user){
  const q=await sb.from("profiles").select("is_super_admin").eq("id",user.id).single();
@@ -37,3 +38,4 @@ $("signupBtn")?.addEventListener("click",async()=>{
 $("logoutBtn")?.addEventListener("click",async()=>{await sb.auth.signOut();location.reload()});
 state();
 })();
+});
