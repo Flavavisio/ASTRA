@@ -8,7 +8,7 @@ function applyPremium(ok){
  let bar=document.getElementById("premiumStateBar"),lock=document.getElementById("natalLock"),details=document.getElementById("natalDetails");
  if(bar){bar.className="premiumStateBar "+(ok?"premiumOn":"premiumFree");bar.textContent=ok?"✦ ASTRA Premium ativo":"ASTRA Free · 1 consulta diária";}
  if(lock)lock.classList.toggle("hidden",ok);
- if(details)details.classList.toggle("premiumLocked",!ok);
+ if(details)details.classList.toggle("premiumLocked",!ok);if(ok&&window.ASTRA_LAST_NATAL&&window.ASTRA_RENDER_NATAL)window.ASTRA_RENDER_NATAL(window.ASTRA_LAST_NATAL);
  document.querySelectorAll(".premiumOnly").forEach(x=>x.classList.toggle("locked",!ok));\n const pricing=document.getElementById("astraPricing"),plan=document.getElementById("pPlan"),activate=document.getElementById("activatePremium"),note=document.getElementById("paymentNote");if(plan)plan.textContent=ok?"Premium":"Free";if(pricing)pricing.classList.toggle("hidden",ok);if(activate){activate.disabled=ok;activate.textContent=ok?"✓ Premium ativo":"Ativar Premium · 1,99 €/mês"}if(note&&ok)note.textContent="A tua licença ASTRA Premium está ativa.";
 }
 document.addEventListener("astra:entitlement",e=>applyPremium(!!e.detail.premium));
