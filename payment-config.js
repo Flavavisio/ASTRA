@@ -1,0 +1,1 @@
+window.ASTRA_PAYMENT={currency:"EUR",monthly:{amount:1.99,period:"month"},annual:{amount:21.49,period:"year",discountPercent:10},checkoutEndpoint:null};

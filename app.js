@@ -1,0 +1,1 @@
+/* ASTRA landing controller intentionally kept minimal; auth.js owns authentication. */

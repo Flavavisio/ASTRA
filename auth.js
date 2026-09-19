@@ -1,0 +1,6 @@
+(()=>{const sb=window.supabaseClient,$=id=>document.getElementById(id);
+async function state(){let {data:{user}}=await sb.auth.getUser();$("authLoggedIn")?.classList.toggle("hidden",!user);$("authLoggedOut")?.classList.toggle("hidden",!!user);if(user){if($("userEmail"))$("userEmail").textContent=user.email;if($("authText"))$("authText").textContent="Conta ligada à ASTRA."}}
+$("loginBtn")&&( $("loginBtn").onclick=async()=>{let r=await sb.auth.signInWithPassword({email:$("authEmail").value.trim(),password:$("authPassword").value});$("authStatus").textContent=r.error?r.error.message:"Sessão iniciada.";if(!r.error)location.href="app.html"});
+$("signupBtn")&&( $("signupBtn").onclick=async()=>{let r=await sb.auth.signUp({email:$("authEmail").value.trim(),password:$("authPassword").value,options:{data:{full_name:$("authName")?.value||""}}});$("authStatus").textContent=r.error?r.error.message:"Conta criada. Confirma o email se for solicitado."});
+$("logoutBtn")&&( $("logoutBtn").onclick=async()=>{await sb.auth.signOut();location.reload()});state();
+})();

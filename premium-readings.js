@@ -1,0 +1,28 @@
+window.ASTRA_PREMIUM_READINGS=(()=>{
+const S={
+"Carneiro":{love:"precisas de espontaneidade e verdade emocional",work:"rendes melhor com autonomia, desafio e objetivos rápidos",money:"tendes a decidir depressa; planeamento ajuda a equilibrar impulso",family:"proteges os teus com intensidade e franqueza",well:"beneficias de movimento e de descarregar energia",self:"és movido por iniciativa e coragem"},
+"Touro":{love:"valorizas lealdade, contacto e estabilidade",work:"cresces com consistência e resultados concretos",money:"procuras segurança e construção gradual",family:"és uma presença estável e protetora",well:"rotina, descanso e conforto ajudam-te a recuperar",self:"tens persistência e forte ligação ao que valorizas"},
+"Gémeos":{love:"precisas de diálogo, curiosidade e estímulo mental",work:"destacas-te em comunicação, variedade e aprendizagem",money:"ganhas clareza quando organizas várias possibilidades",family:"aproximas pessoas através da conversa",well:"a mente precisa de pausas entre estímulos",self:"és curioso, adaptável e comunicativo"},
+"Caranguejo":{love:"procuras segurança emocional, cuidado e intimidade",work:"rendes quando sentes pertença e propósito humano",money:"a segurança tende a pesar nas tuas decisões",family:"família e raízes têm grande importância",well:"recolhimento e conforto emocional ajudam a equilibrar-te",self:"és sensível, intuitivo e protetor"},
+"Leão":{love:"precisas de calor, admiração e expressão afetiva",work:"brilhas quando podes criar, liderar ou ser reconhecido",money:"podes investir generosamente no que te dá orgulho",family:"tendes a assumir um papel caloroso e protetor",well:"criatividade e diversão alimentam a tua energia",self:"és expressivo, criativo e orientado pelo coração"},
+"Virgem":{love:"demonstras afeto através de atenção e pequenos gestos",work:"destacas-te na análise, melhoria e organização",money:"tendes a preferir controlo, detalhe e planeamento",family:"ajudas resolvendo problemas concretos",well:"rotinas simples ajudam a reduzir sobrecarga",self:"és observador, prático e orientado para melhoria"},
+"Balança":{love:"procuras reciprocidade, harmonia e parceria",work:"tens facilidade em negociação, estética e cooperação",money:"ponderas opções e valorizas equilíbrio",family:"tendes a mediar e aproximar posições",well:"ambientes harmoniosos favorecem o teu equilíbrio",self:"és diplomático, relacional e sensível à justiça"},
+"Escorpião":{love:"procuras profundidade, confiança e intensidade",work:"és forte em investigação, estratégia e transformação",money:"tendes a levar recursos e segurança muito a sério",family:"és leal e protetor, embora reservado",well:"precisas de espaço para processar emoções intensas",self:"és profundo, persistente e transformador"},
+"Sagitário":{love:"precisas de liberdade, sinceridade e crescimento conjunto",work:"rendes com visão, exploração e aprendizagem",money:"podes privilegiar experiências e oportunidades",family:"trazes expansão, humor e novas perspetivas",well:"movimento e horizontes novos renovam-te",self:"és explorador, otimista e orientado por significado"},
+"Capricórnio":{love:"valorizas compromisso, confiança e construção duradoura",work:"destacas-te com objetivos, responsabilidade e progresso",money:"tendes a pensar no longo prazo e em segurança",family:"assumes responsabilidades e procuras estabilidade",well:"é importante equilibrar exigência com descanso",self:"és disciplinado, ambicioso e consistente"},
+"Aquário":{love:"precisas de amizade, liberdade e autenticidade",work:"rendes com inovação, independência e novas ideias",money:"podes procurar soluções pouco convencionais",family:"valorizas relações que respeitem individualidade",well:"espaço mental e contacto social equilibrado ajudam-te",self:"és original, independente e orientado para o futuro"},
+"Peixes":{love:"procuras empatia, romantismo e ligação emocional",work:"rendes com imaginação, sensibilidade e propósito",money:"beneficias de estrutura para tornar intuições concretas",family:"és empático e absorves facilmente o ambiente",well:"silêncio, criatividade e limites emocionais ajudam-te",self:"és intuitivo, imaginativo e compassivo"}};
+function sign(r,n){return r?.planets?.[n]?.name}
+function build(r){
+ const sun=S[sign(r,"Sol")]||{}, moon=S[sign(r,"Lua")]||{}, venus=S[sign(r,"Vénus")]||{}, mars=S[sign(r,"Marte")]||{}, mercury=S[sign(r,"Mercúrio")]||{}, jupiter=S[sign(r,"Júpiter")]||{}, asc=S[r?.ascendant?.name]||{};
+ return [
+ {id:"love",icon:"❤️",title:"Amor",lead:venus.love||sun.love,detail:`Vénus descreve a forma como procuras ligação e prazer. ${venus.love||""}. A Lua acrescenta a necessidade emocional: ${moon.love||""}.`},
+ {id:"work",icon:"💼",title:"Trabalho",lead:sun.work,detail:`A tua identidade profissional beneficia de contextos onde ${sun.work||""}. Mercúrio acrescenta ao teu estilo mental que ${mercury.work||""}.`},
+ {id:"money",icon:"💰",title:"Dinheiro",lead:jupiter.money||sun.money,detail:`Na relação com recursos, ${jupiter.money||sun.money||""}. Esta leitura descreve tendências simbólicas e não constitui aconselhamento financeiro.`},
+ {id:"family",icon:"🏡",title:"Família",lead:moon.family||sun.family,detail:`A Lua dá especial peso à vida emocional: ${moon.family||""}. A forma exterior indicada pelo Ascendente acrescenta que ${asc.family||""}.`},
+ {id:"well",icon:"🌿",title:"Bem-estar",lead:moon.well||sun.well,detail:`Para o equilíbrio quotidiano, ${moon.well||sun.well||""}. É uma leitura de bem-estar geral, não aconselhamento médico.`},
+ {id:"self",icon:"✨",title:"Personalidade",lead:sun.self,detail:`O Sol sugere que ${sun.self||""}. O Ascendente mostra a primeira impressão e a forma de entrar nas situações: ${asc.self||""}.`}
+ ];
+}
+return{build};
+})();

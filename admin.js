@@ -1,0 +1,14 @@
+(()=>{const sb=window.supabaseClient,$=id=>document.getElementById(id);let profiles=[];
+async function render(){
+ let p=await sb.from("profiles").select("id,full_name,plan,premium_until,is_super_admin,created_at").order("created_at",{ascending:false});if(p.error)throw p.error;profiles=p.data||[];
+ let d=new Date().toISOString().slice(0,10),c=await sb.from("daily_consultations").select("id",{count:"exact",head:true}).eq("consultation_date",d);
+ $("users").textContent=profiles.length;$("premium").textContent=profiles.filter(x=>x.plan==="premium").length;$("mrr").textContent=(profiles.filter(x=>x.plan==="premium"&&x.premium_until).length*1.99).toLocaleString("pt-PT",{style:"currency",currency:"EUR"});$("today").textContent=c.count||0;
+ $("rows").innerHTML=profiles.map(x=>`<div class="row"><span><b>${x.full_name||"Sem nome"}</b><br><small>${x.id.slice(0,8)}…</small></span><span>${x.is_super_admin?"SUPER ADMIN":(x.plan||"free").toUpperCase()}</span><span>${x.premium_until?new Date(x.premium_until).toLocaleDateString("pt-PT"):(x.plan==="premium"?"Vitalícia":"—")}</span><button class="licenseBtn" data-license-user="${x.id}" data-license-name="${(x.full_name||"Utilizador").replace(/"/g,"&quot;")}">Gerir licença</button></div>`).join("");
+ let a=await sb.from("access_events").select("user_id,event_type,created_at").order("created_at",{ascending:false}).limit(15);$("access").innerHTML=(a.data||[]).map(x=>`<div class="row"><span>${x.user_id.slice(0,8)}…</span><span>${x.event_type}</span><span>${new Date(x.created_at).toLocaleString("pt-PT")}</span><span></span></div>`).join("")||'<p class="muted">Sem acessos registados.</p>';
+ let l=await sb.from("license_events").select("user_id,action,ends_at,created_at,note").order("created_at",{ascending:false}).limit(20);$("licenseHistory").innerHTML=(l.data||[]).map(x=>`<div class="licenseHistoryRow"><b>${x.action}</b><span>${x.user_id.slice(0,8)}…</span><span>${x.ends_at?new Date(x.ends_at).toLocaleDateString("pt-PT"):"Sem expiração"}</span><small>${new Date(x.created_at).toLocaleString("pt-PT")}</small></div>`).join("")||'<p class="muted">Ainda sem alterações de licença.</p>';
+}
+async function gate(){let {data:{user}}=await sb.auth.getUser();if(!user)return;let q=await sb.from("profiles").select("is_super_admin").eq("id",user.id).single();if(q.data?.is_super_admin){$("gate").classList.add("hidden");$("dash").classList.remove("hidden");$("licenseManager").classList.remove("hidden");await render()}}
+$("enter").onclick=async()=>{let r=await sb.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});$("msg").textContent=r.error?r.error.message:"A validar…";if(!r.error)gate()};
+$("out").onclick=async()=>{await sb.auth.signOut();location.reload()};gate();
+window.ASTRA_ADMIN_REFRESH=render;
+})();
