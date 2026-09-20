@@ -22,16 +22,17 @@ $("loginPassword")?.addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBt
 $("openSignup")?.addEventListener("click",()=>{$("signupStatus").textContent="";$("signupDialog").showModal()});
 $("closeSignup")?.addEventListener("click",()=>$("signupDialog").close());
 $("signupBtn")?.addEventListener("click",async()=>{
- const name=$("signupName").value.trim(),email=$("signupEmail").value.trim(),password=$("signupPassword").value,password2=$("signupPassword2").value,status=$("signupStatus");
+ const name=$("signupName").value.trim(),birth=$("signupBirth").value,email=$("signupEmail").value.trim(),password=$("signupPassword").value,password2=$("signupPassword2").value,status=$("signupStatus");
  if(name.split(/\s+/).filter(Boolean).length<2){status.textContent="Indica o teu nome completo.";return}
+ if(!birth){status.textContent="Indica a tua data de nascimento.";return}
  if(!email){status.textContent="Indica o teu email.";return}
  if(password.length<6){status.textContent="A password deve ter pelo menos 6 caracteres.";return}
  if(password!==password2){status.textContent="As passwords não coincidem.";return}
  status.textContent="A criar conta…";
- const r=await sb.auth.signUp({email,password,options:{data:{full_name:name}}});
+ const r=await sb.auth.signUp({email,password,options:{data:{full_name:name,birth_date:birth}}});
  if(r.error){status.textContent=r.error.message;return}
  // Trigger creates profile; explicitly sync name when a session is immediately available.
- if(r.data.user&&r.data.session)await sb.from("profiles").update({full_name:name,updated_at:new Date().toISOString()}).eq("id",r.data.user.id);
+ if(r.data.user&&r.data.session)await sb.from("profiles").update({full_name:name,birth_date:birth,updated_at:new Date().toISOString()}).eq("id",r.data.user.id);
  if(r.data.session){status.textContent="Conta criada.";setTimeout(()=>route(r.data.user),500)}
  else status.textContent="Conta criada. Confirma o email que enviámos para entrares.";
 });
