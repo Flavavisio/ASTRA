@@ -11,4 +11,6 @@ window.ASTRA_PLACES=[
 {name:"Funchal",country:"Portugal",lat:32.6669,lon:-16.9241,tz:"Europe/Lisbon"},
 {name:"Ponta Delgada",country:"Portugal",lat:37.7412,lon:-25.6756,tz:"Atlantic/Azores"}
 ];
-window.ASTRA_FIND_PLACE=q=>{q=(q||"").trim().toLocaleLowerCase("pt");return ASTRA_PLACES.find(p=>p.name.toLocaleLowerCase("pt")===q)||ASTRA_PLACES.find(p=>p.name.toLocaleLowerCase("pt").includes(q));};
+function resolve(q){q=(q||"").trim().toLocaleLowerCase("pt");const p=ASTRA_PLACES.find(x=>x.name.toLocaleLowerCase("pt")===q)||ASTRA_PLACES.find(x=>x.name.toLocaleLowerCase("pt").includes(q));return p?{...p,timezone:p.tz}:null}
+window.ASTRA_FIND_PLACE=resolve;
+window.ASTRA_PLACES.resolve=resolve;
