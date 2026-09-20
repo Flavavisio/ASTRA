@@ -45,14 +45,9 @@ body[data-app-ready="true"] #astraSessionLoader{display:none}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="i18n.js"></script>
 <script src="zodiac-ui.js"></script>
 <script src="places.js"></script><script src="astro-engine.js"></script><script type="module" src="natal-calculator.js"></script><script src="interpretations.js"></script><script src="premium-readings.js"></script><script src="entitlements.js"></script><script src="natal-renderer.js"></script><script src="astra-app.js"></script><script src="payments.js"></script><script src="premium-ui.js"></script><script src="reference-ui.js"></script>
+
 <script>
-(function(){
- function go(id,btn){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');v.style.display='none'});document.querySelectorAll('.nav').forEach(function(v){v.classList.remove('active')});var v=document.getElementById(id);if(v){v.classList.add('active');v.style.display='block';v.scrollIntoView({block:'start',behavior:'smooth'})}if(btn)btn.classList.add('active')}
- document.addEventListener('click',function(e){var b=e.target.closest('.nav[data-view]');if(b){e.preventDefault();go(b.getAttribute('data-view'),b)}});
-})();
-</script>
-<script>
-document.addEventListener('DOMContentLoaded',function(){setTimeout(function(){document.body.dataset.appReady='true'},1200);
+document.addEventListener('DOMContentLoaded',function(){
  var edit=document.getElementById('editProfile'),dlg=document.getElementById('profileDialog'),close=document.getElementById('closeProfile');
  if(edit)edit.addEventListener('click',function(){if(dlg){if(typeof dlg.showModal==='function'&&!dlg.open)dlg.showModal();else dlg.setAttribute('open','')}});
  if(close)close.addEventListener('click',function(){if(dlg){if(typeof dlg.close==='function')dlg.close();else dlg.removeAttribute('open')}});
