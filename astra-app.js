@@ -1,16 +1,18 @@
 (()=>{const sb=window.supabaseClient,$=id=>document.getElementById(id);let user=null,profile=null;
+function showView(id,button){document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));const v=$(id);if(v)v.classList.add("active");if(button)button.classList.add("active");}
+window.ASTRA_SHOW_VIEW=showView;
 const signs=["Capricórnio","Aquário","Peixes","Carneiro","Touro","Gémeos","Caranguejo","Leão","Virgem","Balança","Escorpião","Sagitário"];
 function solar(date){if(!date)return "—";let d=new Date(date+"T12:00:00"),m=d.getMonth()+1,day=d.getDate(),cuts=[[1,20,"Capricórnio","Aquário"],[2,19,"Aquário","Peixes"],[3,21,"Peixes","Carneiro"],[4,20,"Carneiro","Touro"],[5,21,"Touro","Gémeos"],[6,21,"Gémeos","Caranguejo"],[7,23,"Caranguejo","Leão"],[8,23,"Leão","Virgem"],[9,23,"Virgem","Balança"],[10,23,"Balança","Escorpião"],[11,22,"Escorpião","Sagitário"],[12,22,"Sagitário","Capricórnio"]],x=cuts[m-1];return day<x[1]?x[2]:x[3]}
 async function load(){
  let x=await sb.auth.getUser();user=x.data.user;if(!user){location.href="index.html";return}
- let q=await sb.from("profiles").select("*").eq("id",user.id).single();profile=q.data||{};
+ let q=await sb.from("profiles").select("*").eq("id",user.id).single();if(q.error){console.error("profile load",q.error);profile={};}else profile=q.data||{};
  $("greeting").textContent="Olá"+(profile.full_name?" "+profile.full_name.split(" ")[0]:"")+" ✦";$("todayDate").textContent=new Intl.DateTimeFormat("pt-PT",{dateStyle:"full"}).format(new Date());
  $("pName").textContent=profile.full_name||"—";$("pEmail").textContent=user.email||"—";$("pBirth").textContent=profile.birth_date||"—";$("pPlan").textContent=profile.plan==="premium"?"Premium":"Free";
  $("sunSign").textContent=solar(profile.birth_date);$("moonSign").textContent=profile.moon_sign||"Por calcular";$("ascSign").textContent=profile.ascendant_sign||"Por calcular";$("descSign").textContent=profile.descendant_sign||"Por calcular";
  if(window.ASTRA_ENTITLEMENTS)await ASTRA_ENTITLEMENTS.refresh(sb);
  const ready=window.ASTRA_ASTRO?.birthDataReady?.(profile);if(!ready){setTimeout(()=>{$("editName").value=profile.full_name||"";$("editBirth").value=profile.birth_date||"";$("editTime").value=profile.birth_time||"";$("editPlace").value=profile.birth_place||"";$("editTimezone").value=profile.birth_timezone||"";$("profileMsg").textContent="Completa os teus dados de nascimento para criar o teu perfil ASTRA.";$("profileDialog").showModal()},150)}else if((!profile.moon_sign||!profile.ascendant_sign||!profile.descendant_sign)&&window.ASTRA_NATAL?.calculateNatal){try{let r=await ASTRA_NATAL.calculateNatal(profile),astro={moon_sign:r.moon.name,ascendant_sign:r.ascendant.name,descendant_sign:r.descendant.name,updated_at:new Date().toISOString()};await sb.from("profiles").update(astro).eq("id",user.id);profile={...profile,...astro};$("moonSign").textContent=r.moon.name;$("ascSign").textContent=r.ascendant.name;$("descSign").textContent=r.descendant.name;window.ASTRA_LAST_NATAL=r;window.ASTRA_RENDER_NATAL?.(r);$("chartStatus").textContent="Mapa calculado com os teus dados de nascimento."}catch(e){console.warn("automatic natal calculation",e)}}
 }
-document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav,.view").forEach(x=>x.classList.remove("active"));b.classList.add("active");$(b.dataset.view).classList.add("active")});
+document.addEventListener("click",e=>{const b=e.target.closest(".nav[data-view]");if(b){e.preventDefault();showView(b.dataset.view,b)}});
 $("logout").onclick=async()=>{await sb.auth.signOut();location.href="index.html"};
 $("editProfile").onclick=()=>{ $("editName").value=profile.full_name||"";$("editBirth").value=profile.birth_date||"";$("editTime").value=profile.birth_time||"";$("editPlace").value=profile.birth_place||"";$("editTimezone").value=profile.birth_timezone||"";$("profileDialog").showModal()};
 $("closeProfile").onclick=()=>$("profileDialog").close();
