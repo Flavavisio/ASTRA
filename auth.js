@@ -5,10 +5,16 @@ async function route(user){
  location.href=q.data?.is_super_admin?"admin.html":"app.html";
 }
 async function state(){
- const {data:{user}}=await sb.auth.getUser();
+ const {data:{user},error}=await sb.auth.getUser();
+ if(error){console.warn("ASTRA auth state",error)}
  $("authLoggedIn")?.classList.toggle("hidden",!user);
  $("authLoggedOut")?.classList.toggle("hidden",!!user);
- if(user){if($("userEmail"))$("userEmail").textContent=user.email||"";if($("authText"))$("authText").textContent="Sessão iniciada."}
+ if(user){
+  if($("userEmail"))$("userEmail").textContent=user.email||"";
+  if($("authText"))$("authText").textContent="Sessão iniciada. A abrir a tua ASTRA…";
+  if($("authTitle"))$("authTitle").textContent="Bem-vindo de volta ✦";
+  await route(user);
+ }
 }
 $("loginBtn")?.addEventListener("click",async()=>{
  const email=$("loginEmail").value.trim(),password=$("loginPassword").value,status=$("loginStatus");
