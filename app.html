@@ -46,4 +46,11 @@
  function go(id,btn){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');v.style.display='none'});document.querySelectorAll('.nav').forEach(function(v){v.classList.remove('active')});var v=document.getElementById(id);if(v){v.classList.add('active');v.style.display='block';window.scrollTo({top:0,behavior:'smooth'})}if(btn)btn.classList.add('active')}
  document.addEventListener('click',function(e){var b=e.target.closest('.nav[data-view]');if(b){e.preventDefault();go(b.getAttribute('data-view'),b)}});
 })();
+</script>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ var edit=document.getElementById('editProfile'),dlg=document.getElementById('profileDialog'),close=document.getElementById('closeProfile');
+ if(edit)edit.addEventListener('click',function(){if(dlg){if(typeof dlg.showModal==='function'&&!dlg.open)dlg.showModal();else dlg.setAttribute('open','')}});
+ if(close)close.addEventListener('click',function(){if(dlg){if(typeof dlg.close==='function')dlg.close();else dlg.removeAttribute('open')}});
+});
 </script></body></html>
