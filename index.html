@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#120d24">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>ASTRA v0.5</title>
+  <title>ASTRA · O teu dia nos astros</title>
   <link rel="manifest" href="manifest.json">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -20,66 +20,6 @@
   <header class="brand">
     <div class="moon">☾</div><h1>ASTRA</h1><p>O teu dia nos astros</p>
   </header>
-
-  
-
-  
-  </section>
-
-  <dialog id="profileDialog">
-    <form method="dialog" class="dialogCard">
-      <button class="close">×</button>
-      <span class="eyebrow">PERFIL</span><h2>Os teus dados</h2>
-      <label>Nome<input id="editName"></label>
-      <label>Data de nascimento<input id="editBirth" type="date"></label>
-      <hr>
-      <span class="eyebrow">DADOS PREMIUM</span>
-      <label>Hora de nascimento<input id="birthTime" type="time"></label>
-      <label>Local de nascimento
-        <select id="birthPlace">
-          <option value="">Seleciona o local</option>
-          <optgroup label="Portugal">
-            <option value="Lisboa|38.7223|-9.1393">Lisboa</option>
-            <option value="Vila Franca de Xira|38.9553|-8.9897">Vila Franca de Xira</option>
-            <option value="Póvoa de Santa Iria|38.8610|-9.0645">Póvoa de Santa Iria</option>
-            <option value="Cascais|38.6979|-9.4215">Cascais</option>
-            <option value="Setúbal|38.5244|-8.8882">Setúbal</option>
-            <option value="Santarém|39.2362|-8.6859">Santarém</option>
-            <option value="Leiria|39.7436|-8.8071">Leiria</option>
-            <option value="Coimbra|40.2033|-8.4103">Coimbra</option>
-            <option value="Aveiro|40.6405|-8.6538">Aveiro</option>
-            <option value="Porto|41.1579|-8.6291">Porto</option>
-            <option value="Braga|41.5454|-8.4265">Braga</option>
-            <option value="Viana do Castelo|41.6918|-8.8344">Viana do Castelo</option>
-            <option value="Vila Real|41.3006|-7.7441">Vila Real</option>
-            <option value="Bragança|41.8061|-6.7567">Bragança</option>
-            <option value="Viseu|40.6566|-7.9125">Viseu</option>
-            <option value="Guarda|40.5373|-7.2658">Guarda</option>
-            <option value="Castelo Branco|39.8222|-7.4909">Castelo Branco</option>
-            <option value="Portalegre|39.2967|-7.4280">Portalegre</option>
-            <option value="Évora|38.5714|-7.9135">Évora</option>
-            <option value="Beja|38.0151|-7.8632">Beja</option>
-            <option value="Faro|37.0194|-7.9304">Faro</option>
-            <option value="Funchal|32.6669|-16.9241">Funchal</option>
-            <option value="Ponta Delgada|37.7412|-25.6756">Ponta Delgada</option>
-          </optgroup>
-          <optgroup label="Internacional">
-            <option value="Madrid|40.4168|-3.7038">Madrid</option>
-            <option value="Paris|48.8566|2.3522">Paris</option>
-            <option value="London|51.5074|-0.1278">Londres</option>
-            <option value="Luxembourg|49.6116|6.1319">Luxemburgo</option>
-            <option value="Geneva|46.2044|6.1432">Genebra</option>
-            <option value="São Paulo|-23.5505|-46.6333">São Paulo</option>
-            <option value="Rio de Janeiro|-22.9068|-43.1729">Rio de Janeiro</option>
-            <option value="New York|40.7128|-74.0060">Nova Iorque</option>
-          </optgroup>
-        </select>
-      </label>
-      <p class="muted">A v0.5 inclui uma base local de cidades sem custos de API. A pesquisa mundial será ligada através de um serviço configurável antes da publicação.</p>
-      <button id="saveProfile" value="default" class="primary">Guardar</button>
-    </form>
-  </dialog>
-
   <div id="toast" class="toast hidden"></div>
 <footer class="devFooter"></footer><section class="card accountCard" id="accountCard">
   <span class="eyebrow">CONTA ASTRA</span>
