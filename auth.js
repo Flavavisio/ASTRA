@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded",()=>{
 (()=>{const sb=window.supabaseClient,$=id=>document.getElementById(id);
 async function route(user){
- const q=await sb.from("profiles").select("is_super_admin").eq("id",user.id).maybeSingle();
- location.href=q.data?.is_super_admin?"admin.html":"app.html";
+ let isAdmin=false;
+ try{const q=await Promise.race([sb.from("profiles").select("is_super_admin").eq("id",user.id).maybeSingle(),new Promise((_,r)=>setTimeout(()=>r(new Error("ROUTE_TIMEOUT")),4000))]);isAdmin=!!q.data?.is_super_admin}catch(e){console.warn("ASTRA route",e)}
+ location.replace(isAdmin?"admin.html":"app.html");
 }
 async function state(){
  const {data:{user},error}=await sb.auth.getUser();
