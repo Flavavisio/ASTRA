@@ -46,4 +46,6 @@ body[data-app-ready="true"] #astraSessionLoader{display:none}
 <script src="zodiac-ui.js"></script>
 <script src="places.js"></script><script src="astro-engine.js"></script><script type="module" src="natal-calculator.js"></script><script src="interpretations.js"></script><script src="premium-readings.js"></script><script src="entitlements.js"></script><script src="natal-renderer.js"></script><script src="astra-app.js"></script><script src="payments.js"></script><script src="premium-ui.js"></script><script src="reference-ui.js"></script><script data-astra-zoom-lock>
 (()=>{let last=0;document.addEventListener("touchend",e=>{const now=Date.now();if(now-last<350)e.preventDefault();last=now},{passive:false});document.addEventListener("gesturestart",e=>e.preventDefault(),{passive:false});document.addEventListener("gesturechange",e=>e.preventDefault(),{passive:false});})();
+</script><script data-astra-startup-watchdog>
+(()=>{const reveal=()=>{if(document.body.dataset.appReady!=="true"){document.body.dataset.appReady="true";const s=document.getElementById("dailyStatus");if(s&&!s.textContent)s.textContent="A sessão está a demorar a carregar. Podes tentar novamente ou terminar sessão."}};setTimeout(reveal,9000);window.addEventListener("pageshow",e=>{if(e.persisted)setTimeout(reveal,1200)});})();
 </script></body></html>
