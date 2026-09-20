@@ -1,12 +1,3 @@
-window.ASTRA_ENTITLEMENTS=(()=>{
-let premium=false;
-async function refresh(client){
- const {data,error}=await client.rpc("has_astra_premium");
- if(error){console.error("premium check",error);premium=false}else premium=!!data;
- document.documentElement.dataset.astraPremium=premium?"true":"false";
- document.dispatchEvent(new CustomEvent("astra:entitlement",{detail:{premium}}));
- return premium;
-}
-const isPremium=()=>premium;
-return{refresh,isPremium};
-})();
+window.ASTRA_ENTITLEMENTS=(()=>{let state={premium:false,admin:false,plan:"free",premiumUntil:null};
+async function refresh(client){const {data,error}=await client.rpc("get_astra_entitlement");if(error){console.error("premium check",error);state={premium:false,admin:false,plan:"free",premiumUntil:null}}else{const r=Array.isArray(data)?data[0]:data;state={premium:!!r?.is_premium,admin:!!r?.is_admin,plan:r?.plan||"free",premiumUntil:r?.premium_until||null}}document.documentElement.dataset.astraPremium=state.premium?"true":"false";document.dispatchEvent(new CustomEvent("astra:entitlement",{detail:{...state}}));return state.premium}
+const isPremium=()=>state.premium,isAdmin=()=>state.admin,getState=()=>({...state});return{refresh,isPremium,isAdmin,getState};})();
