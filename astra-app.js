@@ -35,7 +35,10 @@ $("saveProfile").onclick=async()=>{
   if(!resolved){msg.textContent="Seleciona um local da lista para podermos obter as coordenadas corretas.";return}
   btn.disabled=true;btn.textContent="A guardar…";
   let patch={id:user.id,full_name:name,birth_date:birth,birth_time:time,birth_place:resolved.name,birth_lat:resolved.lat,birth_lon:resolved.lon,birth_timezone:resolved.timezone,updated_at:new Date().toISOString()};
-  let z=await sb.from("profiles").upsert(patch,{onConflict:"id"}).select("*").single();
+  let exists=await sb.from("profiles").select("id").eq("id",user.id).maybeSingle();
+  let z=exists.data?.id
+   ? await sb.from("profiles").update(patch).eq("id",user.id).select("*").single()
+   : await sb.from("profiles").insert(patch).select("*").single();
   if(z.error)throw z.error;
   profile=z.data||{...profile,...patch};
   msg.textContent="Dados astrológicos guardados ✓";paintProfile();
