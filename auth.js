@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded",()=>{
 (()=>{const sb=window.supabaseClient,$=id=>document.getElementById(id);
 async function route(user){
- const q=await sb.from("profiles").select("is_super_admin").eq("id",user.id).single();
+ const q=await sb.from("profiles").select("is_super_admin").eq("id",user.id).maybeSingle();
  location.href=q.data?.is_super_admin?"admin.html":"app.html";
 }
 async function state(){
@@ -33,7 +33,7 @@ $("signupBtn")?.addEventListener("click",async()=>{
  if(r.error){status.textContent=r.error.message;return}
  // Trigger creates profile; explicitly sync name when a session is immediately available.
  if(r.data.user&&r.data.session)await sb.from("profiles").update({full_name:name,birth_date:birth,updated_at:new Date().toISOString()}).eq("id",r.data.user.id);
- if(r.data.session){status.textContent="Conta criada.";setTimeout(()=>route(r.data.user),500)}
+ if(r.data.session){status.textContent="Conta criada.";await route(r.data.user)}
  else status.textContent="Conta criada. Confirma o email que enviámos para entrares.";
 });
 $("logoutBtn")?.addEventListener("click",async()=>{await sb.auth.signOut();location.reload()});
