@@ -44,12 +44,4 @@ body[data-app-ready="true"] #astraSessionLoader{display:none}
 </section></main><nav class="bottom"><button class="nav active" data-view="todayView"><b>☾</b><span data-i18n="today">Hoje</span></button><button class="nav" data-view="mapView"><b>✧</b><span data-i18n="chart">Mapa</span></button><button class="nav" data-view="premiumView"><b>♕</b><span data-i18n="premium">Premium</span></button><button class="nav" data-view="profileView"><b>◯</b><span data-i18n="profile">Perfil</span></button></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="i18n.js"></script>
 <script src="zodiac-ui.js"></script>
-<script src="places.js"></script><script src="astro-engine.js"></script><script type="module" src="natal-calculator.js"></script><script src="interpretations.js"></script><script src="premium-readings.js"></script><script src="entitlements.js"></script><script src="natal-renderer.js"></script><script src="astra-app.js"></script><script src="payments.js"></script><script src="premium-ui.js"></script><script src="reference-ui.js"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded',function(){
- var edit=document.getElementById('editProfile'),dlg=document.getElementById('profileDialog'),close=document.getElementById('closeProfile');
- if(edit)edit.addEventListener('click',function(){if(dlg){if(typeof dlg.showModal==='function'&&!dlg.open)dlg.showModal();else dlg.setAttribute('open','')}});
- if(close)close.addEventListener('click',function(){if(dlg){if(typeof dlg.close==='function')dlg.close();else dlg.removeAttribute('open')}});
-});
-</script></body></html>
+<script src="places.js"></script><script src="astro-engine.js"></script><script type="module" src="natal-calculator.js"></script><script src="interpretations.js"></script><script src="premium-readings.js"></script><script src="entitlements.js"></script><script src="natal-renderer.js"></script><script src="astra-app.js"></script><script src="payments.js"></script><script src="premium-ui.js"></script><script src="reference-ui.js"></script></body></html>
