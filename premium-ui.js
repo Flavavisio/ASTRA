@@ -14,7 +14,7 @@ function applyPremium(ok){
 }
 document.addEventListener("astra:entitlement",e=>applyPremium(!!e.detail.premium));
 document.addEventListener("click",e=>{
- if(e.target.closest("[data-go-premium]"))document.getElementById("astraPricing")?.scrollIntoView({behavior:"smooth",block:"center"});
+ if(e.target.closest("[data-go-premium]")){const b=document.querySelector('.nav[data-view="premiumView"]');window.ASTRA_SHOW_VIEW?.("premiumView",b);}
  let b=e.target.closest(".billing"); if(b){document.querySelectorAll(".billing").forEach(x=>x.classList.remove("active"));b.classList.add("active");let annual=b.dataset.billing==="annual";document.querySelector("#premiumPrice strong").textContent=annual?"21,49 €":"1,99 €";document.querySelector("#premiumPrice small").textContent=annual?"/ano":"/mês";document.getElementById("annualSaving")?.classList.toggle("hidden",!annual);window.ASTRA_SELECTED_PLAN=annual?"annual":"monthly";}
 });
 window.ASTRA_SELECTED_PLAN="monthly";
