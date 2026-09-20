@@ -6,9 +6,9 @@ set("moonSign",(r.moon?.glyph||"")+" "+(r.moon?.name||""));set("moonDegree",fmt(
 set("ascSign",(r.ascendant?.glyph||"")+" "+(r.ascendant?.name||""));set("ascDegree",fmt(r.ascendant));
 set("descSign",(r.descendant?.glyph||"")+" "+(r.descendant?.name||""));set("descDegree",fmt(r.descendant));
 const d=document.getElementById("natalDetails"),l=document.getElementById("planetList"),w=document.getElementById("natalWheel"),al=document.getElementById("aspectList");if(!d||!r?.planets)return;d.classList.remove("hidden");
-const premium=window.ASTRA_ENTITLEMENTS?.isPremium?.()||false,lock=document.getElementById("natalLock");
+const premium=window.ASTRA_ENTITLEMENTS?.isPremium?.()||false,serverAuthorized=r?.serverAuthorized===true,lock=document.getElementById("natalLock");
 if(lock)lock.classList.toggle("hidden",premium);
-if(!premium){if(w)w.innerHTML="";if(l)l.innerHTML="";if(al)al.innerHTML="";const il=document.getElementById("interpretationList");if(il)il.innerHTML="";const pa=document.getElementById("premiumAreas");if(pa)pa.innerHTML="";return}
+if(!premium||!serverAuthorized){if(w)w.innerHTML="";if(l)l.innerHTML="";if(al)al.innerHTML="";const il=document.getElementById("interpretationList");if(il)il.innerHTML="";const pa=document.getElementById("premiumAreas");if(pa)pa.innerHTML="";return}
 if(l)l.innerHTML=Object.entries(r.planets).map(([n,x])=>`<div class="planetRow"><span>${x.glyph} ${n}</span><b>${x.name} ${x.degree.toFixed(1)}°</b></div>`).join("");
 const cx=180,cy=180,rad=145,pr=112,ir=78,xy=(deg,rr)=>{const a=(deg-90)*Math.PI/180;return[cx+rr*Math.cos(a),cy+rr*Math.sin(a)]};let svg=`<svg viewBox="0 0 360 360" class="wheelSvg"><circle cx="180" cy="180" r="150" class="ring"/><circle cx="180" cy="180" r="82" class="ring inner"/>`;
 for(let i=0;i<12;i++){const deg=r.cusps?.[i]??i*30,[x,y]=xy(deg,rad),h=xy(deg+8,130);svg+=`<line x1="180" y1="180" x2="${x}" y2="${y}" class="houseLine"/><text x="${h[0]}" y="${h[1]}" class="houseNo">${i+1}</text>`}
