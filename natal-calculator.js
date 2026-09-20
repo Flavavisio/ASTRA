@@ -3,8 +3,7 @@ function norm(x){return((x%360)+360)%360}
 function rad(x){return x*Math.PI/180} function deg(x){return x*180/Math.PI}
 function julianDate(d){return d.getTime()/86400000+2440587.5}
 function meanObliquity(jd){const T=(jd-2451545)/36525;return 23+26/60+(21.448-46.815*T-0.00059*T*T+0.001813*T*T*T)/3600}
-function gmst(jd){const T=(jd-2451545)/36525;return norm(280.46061837+360.98564736629*(jd-2451545)+0.000387933*T*T-T*T*T/38710000)}
-function angles(date,lat,lon){const jd=julianDate(date),theta=rad(norm(gmst(jd)+lon)),phi=rad(lat),eps=rad(meanObliquity(jd));let mc=norm(deg(Math.atan2(Math.sin(theta)*Math.cos(eps)+Math.tan(phi)*Math.sin(eps),Math.cos(theta))));let asc=norm(deg(Math.atan2(-Math.cos(theta),Math.sin(theta)*Math.cos(eps)+Math.tan(phi)*Math.sin(eps))));return{asc,mc,desc:norm(asc+180),ic:norm(mc+180),jd}}
+function angles(date,lat,lon){const jd=julianDate(date),eps=rad(meanObliquity(jd)),theta=rad(norm(Astronomy.SiderealTime(date)*15+lon)),phi=rad(lat);const asc=norm(deg(Math.atan2(Math.cos(theta),-(Math.sin(theta)*Math.cos(eps)+Math.tan(phi)*Math.sin(eps))))),mc=norm(deg(Math.atan2(Math.sin(theta)*Math.cos(eps),Math.cos(theta))));return{asc,mc,desc:norm(asc+180),ic:norm(mc+180),jd}}
 function eclipticLongitude(body,date){if(body==="Moon")return Astronomy.EclipticGeoMoon(date).lon;const v=Astronomy.GeoVector(Astronomy.Body[body],date,true);return Astronomy.Ecliptic(v).elon}
 const D=[["Sol","☉","Sun"],["Lua","☽","Moon"],["Mercúrio","☿","Mercury"],["Vénus","♀","Venus"],["Marte","♂","Mars"],["Júpiter","♃","Jupiter"],["Saturno","♄","Saturn"],["Urano","♅","Uranus"],["Neptuno","♆","Neptune"],["Plutão","♇","Pluto"]];
 const ASP=[["Conjunção",0,8,"☌"],["Sextil",60,5,"⚹"],["Quadratura",90,7,"□"],["Trígono",120,7,"△"],["Oposição",180,8,"☍"]];
