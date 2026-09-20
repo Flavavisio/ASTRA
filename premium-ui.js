@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded",async()=>{
  const client=window.supabaseClient||window.sb||window.s,bar=document.getElementById("premiumStateBar");
  if(!client){if(bar)bar.textContent="Sessão Premium será verificada após autenticação.";return}
- const ok=await ASTRA_ENTITLEMENTS.refresh(client);
- applyPremium(ok);
+ let ok=false;try{ok=await Promise.race([ASTRA_ENTITLEMENTS.refresh(client),new Promise((_,r)=>setTimeout(()=>r(new Error("ENTITLEMENT_TIMEOUT")),5000))])}catch(e){console.warn("ASTRA premium startup",e)}applyPremium(ok);
 });
 function applyPremium(ok){
  let bar=document.getElementById("premiumStateBar"),lock=document.getElementById("natalLock"),details=document.getElementById("natalDetails");
