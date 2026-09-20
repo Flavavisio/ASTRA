@@ -41,4 +41,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="i18n.js"></script>
 <script src="zodiac-ui.js"></script>
 <script src="places.js"></script><script src="astro-engine.js"></script><script type="module" src="natal-calculator.js"></script><script src="interpretations.js"></script><script src="premium-readings.js"></script><script src="entitlements.js"></script><script src="natal-renderer.js"></script><script src="astra-app.js"></script><script src="payments.js"></script><script src="premium-ui.js"></script><script src="reference-ui.js"></script>
-</body></html>
+<script>
+(function(){
+ function go(id,btn){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});document.querySelectorAll('.nav').forEach(function(v){v.classList.remove('active')});var v=document.getElementById(id);if(v)v.classList.add('active');if(btn)btn.classList.add('active')}
+ document.addEventListener('click',function(e){var b=e.target.closest('.nav[data-view]');if(b){e.preventDefault();go(b.getAttribute('data-view'),b)}});
+})();
+</script></body></html>
