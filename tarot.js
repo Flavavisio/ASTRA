@@ -113,6 +113,7 @@ function renderSaved(c){
  const r=$("tarotResult");r.classList.remove("hidden");
  r.innerHTML="<div class='tarotResultHead'><span class='eyebrow'>A TUA CARTA DE HOJE</span><span class='tarotResultDate'>"+tarotDate()+"</span></div><div class='tarotRevealWrap'><div class='tarotRevealedCard tarotResultCard'><span class='tarotCardGlow'></span><img src='"+cardImage(c)+"' alt='"+c.name+"'></div><div class='tarotMeaning'><h2>"+c.name+"</h2><small>"+c.arcana+"</small><div class='tarotEnergy'><span>✦</span><div><small>ENERGIA DOMINANTE DO DIA</small><b>"+energyFor(c)+"</b></div></div><div class='tarotReadingBlock'><h3>Essência</h3><p>"+c.essence+".</p></div><div class='tarotReadingBlock'><h3>O que isto diz sobre a tua pergunta</h3><p>"+c.question+"</p></div><div class='tarotReadingBlock'><h3>Conselho prático para hoje</h3><p>"+c.advice+"</p></div><div class='tarotTomorrow'><span>☾</span><div><b>Tiragem concluída</b><small>Volta amanhã para uma nova carta.</small></div></div><p class='tiny muted'>O Tarot ASTRA é uma ferramenta de reflexão e entretenimento. Não determina acontecimentos futuros nem substitui aconselhamento profissional.</p></div></div>";
  setStatus("A tua tiragem diária está guardada.");
+ setTimeout(()=>loadHistory(),0);
 }
 async function restore(){
  try{
@@ -131,7 +132,7 @@ function openQuestion(){
 function showCandidates(uid){
  $("tarotIntro").classList.add("hidden");$("tarotResult").classList.add("hidden");$("tarotDrawArea").classList.remove("hidden");
  const cards=candidates(uid),wrap=$("tarotCards");
- wrap.innerHTML=cards.map((c,i)=>"<button class='tarotPick' data-card='"+c.code+"' aria-label='Carta "+(i+1)+"'><span class='tarotFlip'><span class='tarotBack'><span class='tarotBackMark'>✦</span></span><span class='tarotFront'><img src='"+cardImage(c)+"' alt=''></span></span></button>").join("");
+ wrap.classList.remove("tarotDealing");void wrap.offsetWidth;wrap.classList.add("tarotDealing");wrap.innerHTML=cards.map((c,i)=>"<button class='tarotPick' style='--tarot-i:"+i+"' data-card='"+c.code+"' aria-label='Carta "+(i+1)+"'><span class='tarotFlip'><span class='tarotBack'><span class='tarotBackMark'>✦</span><span class='tarotAura'></span></span><span class='tarotFront'><img src='"+cardImage(c)+"' alt=''></span></span></button>").join("");
  setStatus("Respira, observa as três cartas e seleciona a que mais te atrai.");
 }
 async function choose(btn){
