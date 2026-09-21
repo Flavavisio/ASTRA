@@ -12,7 +12,7 @@ async function state(){
  $("authLoggedOut")?.classList.toggle("hidden",!!user);
  if(user){
   if($("userEmail"))$("userEmail").textContent=user.email||"";
-  if($("authText"))$("authText").textContent="Sessão iniciada. A abrir a tua ASTRA…";
+  if($("authText"))$("authText").textContent="Sessão iniciada. A abrir a tua Astralis…";
   if($("authTitle"))$("authTitle").textContent="Bem-vindo de volta ✦";
   await route(user);
  }
