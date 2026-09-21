@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 430" role="img" aria-labelledby="t d">
+<title id="t">Astralis</title><desc id="d">Lua crescente dourada, planeta violeta, órbitas, estrela central e identidade Astralis.</desc>
+<defs>
+ <radialGradient id="p" cx="38%" cy="32%"><stop stop-color="#6550b8"/><stop offset=".48" stop-color="#2a174e"/><stop offset="1" stop-color="#100719"/></radialGradient>
+ <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1af"/><stop offset=".35" stop-color="#e8c76e"/><stop offset=".72" stop-color="#b88638"/><stop offset="1" stop-color="#f6dfa0"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+</defs>
+<g transform="translate(450 155)">
+ <circle r="118" fill="url(#p)" stroke="#d9b964" stroke-width="3"/>
+ <ellipse rx="178" ry="54" fill="none" stroke="#d9b964" stroke-width="2.5" transform="rotate(-12)" opacity=".85"/>
+ <ellipse rx="155" ry="37" fill="none" stroke="#8c6fb7" stroke-width="1.5" transform="rotate(17)" opacity=".65"/>
+ <path d="M-20-130A142 142 0 1 0-20 130A108 108 0 1 1-20-130Z" fill="url(#g)" filter="url(#glow)"/>
+ <g fill="none" stroke="url(#g)" stroke-width="4" stroke-linejoin="round" filter="url(#glow)">
+   <path d="M0-65 15-20 62-20 24 8 39 53 0 26-39 53-24 8-62-20-15-20Z"/>
+   <circle r="70" stroke-width="2"/>
+ </g>
+ <g fill="#f1d37e" font-family="Georgia,serif" font-size="26" text-anchor="middle">
+  <text x="0" y="-147">♈</text><text x="94" y="-108">♉</text><text x="147" y="-28">♊</text><text x="136" y="70">♋</text>
+  <text x="72" y="142">♌</text><text x="-72" y="142">♍</text><text x="-136" y="70">♎</text><text x="-147" y="-28">♏</text>
+ </g>
+ <g fill="#f5dfa0"><circle cx="183" cy="-62" r="4"/><circle cx="-186" cy="41" r="3"/><circle cx="153" cy="98" r="3"/><circle cx="-156" cy="-105" r="4"/></g>
+</g>
+<text x="450" y="342" fill="url(#g)" font-family="Georgia,Times New Roman,serif" font-size="86" font-style="italic" text-anchor="middle" letter-spacing="2">Astralis</text>
+<text x="450" y="387" fill="#c9bbd1" font-family="Arial,sans-serif" font-size="18" text-anchor="middle" letter-spacing="3">OS TEUS ASTROS · AS TUAS CARTAS · O TEU CAMINHO</text>
+</svg>
