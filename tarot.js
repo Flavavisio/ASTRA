@@ -79,7 +79,7 @@ function setStatus(t){const x=$("tarotStatus");if(x)x.textContent=t||""}
 function formatHistoryDate(d){try{return new Intl.DateTimeFormat("pt-PT",{day:"2-digit",month:"short",year:"numeric",timeZone:"Europe/Lisbon"}).format(new Date(d+"T12:00:00"))}catch(_){return d}}
 function renderHistoryLocked(){
  const box=$("tarotHistoryList");if(!box)return;
- box.innerHTML="<div class='tarotHistoryLock'><span>♕</span><div><b>Histórico Premium</b><p>Revê as cartas que te saíram nos dias anteriores com ASTRA Premium.</p></div><button class='primary' data-go-premium>Ver Premium ✦</button></div>";
+ box.innerHTML="<div class='tarotHistoryLock'><span>♕</span><div><b>Histórico Premium</b><p>Revê as cartas que te saíram nos dias anteriores com Astralis Premium.</p></div><button class='primary' data-go-premium>Ver Premium ✦</button></div>";
 }
 function renderStatsLocked(){
  const box=$("tarotStats");if(!box)return;
@@ -146,7 +146,7 @@ function renderSaved(c){
  if(!c)return;
  $("tarotIntro")?.classList.add("hidden");$("tarotDrawArea")?.classList.add("hidden");
  const r=$("tarotResult");r.classList.remove("hidden");
- r.innerHTML="<div class='tarotResultHead'><span class='eyebrow'>A TUA CARTA DE HOJE</span><span class='tarotResultDate'>"+tarotDate()+"</span></div><div class='tarotRevealWrap'><div class='tarotRevealedCard tarotResultCard'><span class='tarotCardGlow'></span><img src='"+cardImage(c)+"' alt='"+c.name+"'></div><div class='tarotMeaning'><h2>"+c.name+"</h2><small>"+c.arcana+"</small><div class='tarotEnergy'><span>✦</span><div><small>ENERGIA DOMINANTE DO DIA</small><b>"+energyFor(c)+"</b></div></div><div class='tarotReadingBlock'><h3>Essência</h3><p>"+c.essence+".</p></div><div class='tarotReadingBlock'><h3>O que isto diz sobre a tua pergunta</h3><p>"+c.question+"</p></div><div class='tarotReadingBlock'><h3>Conselho prático para hoje</h3><p>"+c.advice+"</p></div><div class='tarotTomorrow'><span>☾</span><div><b>Tiragem concluída</b><small>Volta amanhã para uma nova carta.</small></div></div><p class='tiny muted'>O Tarot ASTRA é uma ferramenta de reflexão e entretenimento. Não determina acontecimentos futuros nem substitui aconselhamento profissional.</p></div></div>";
+ r.innerHTML="<div class='tarotResultHead'><span class='eyebrow'>A TUA CARTA DE HOJE</span><span class='tarotResultDate'>"+tarotDate()+"</span></div><div class='tarotRevealWrap'><div class='tarotRevealedCard tarotResultCard'><span class='tarotCardGlow'></span><img src='"+cardImage(c)+"' alt='"+c.name+"'></div><div class='tarotMeaning'><h2>"+c.name+"</h2><small>"+c.arcana+"</small><div class='tarotEnergy'><span>✦</span><div><small>ENERGIA DOMINANTE DO DIA</small><b>"+energyFor(c)+"</b></div></div><div class='tarotReadingBlock'><h3>Essência</h3><p>"+c.essence+".</p></div><div class='tarotReadingBlock'><h3>O que isto diz sobre a tua pergunta</h3><p>"+c.question+"</p></div><div class='tarotReadingBlock'><h3>Conselho prático para hoje</h3><p>"+c.advice+"</p></div><div class='tarotTomorrow'><span>☾</span><div><b>Tiragem concluída</b><small>Volta amanhã para uma nova carta.</small></div></div><p class='tiny muted'>O Tarot Astralis é uma ferramenta de reflexão e entretenimento. Não determina acontecimentos futuros nem substitui aconselhamento profissional.</p></div></div>";
  setStatus("A tua tiragem diária está guardada.");
  setTimeout(()=>loadHistory(),0);
 }
