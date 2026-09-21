@@ -76,6 +76,32 @@ function energyFor(c){
  const x=(c.essence||"energia interior").split(",")[0].trim();return x.charAt(0).toUpperCase()+x.slice(1);
 }
 function setStatus(t){const x=$("tarotStatus");if(x)x.textContent=t||""}
+function formatHistoryDate(d){try{return new Intl.DateTimeFormat("pt-PT",{day:"2-digit",month:"short",year:"numeric",timeZone:"Europe/Lisbon"}).format(new Date(d+"T12:00:00"))}catch(_){return d}}
+function renderHistoryLocked(){
+ const box=$("tarotHistoryList");if(!box)return;
+ box.innerHTML="<div class='tarotHistoryLock'><span>♕</span><div><b>Histórico Premium</b><p>Revê as cartas que te saíram nos dias anteriores com ASTRA Premium.</p></div><button class='primary' data-go-premium>Ver Premium ✦</button></div>";
+}
+async function loadHistory(){
+ const box=$("tarotHistoryList");if(!box)return;
+ const premium=window.ASTRA_ENTITLEMENTS?.isPremium?.()||false;
+ if(!premium){renderHistoryLocked();return}
+ box.innerHTML="<p class='muted'>A carregar o teu histórico…</p>";
+ try{
+  const q=await sb.rpc("get_tarot_history",{p_limit:30});if(q.error)throw q.error;
+  const rows=Array.isArray(q.data)?q.data:[];
+  if(!rows.length){box.innerHTML="<div class='card tarotHistoryEmpty'><span>☾</span><p>Ainda não tens tiragens anteriores. As tuas cartas começarão a aparecer aqui.</p></div>";return}
+  box.innerHTML=rows.map(r=>{const c=byCode(r.card_code);if(!c)return "";return "<button class='tarotHistoryItem' data-history-card='"+c.code+"'><img src='"+cardImage(c)+"' alt=''><span><small>"+formatHistoryDate(r.draw_date)+"</small><b>"+c.name+"</b><em>"+energyFor(c)+"</em></span><i>›</i></button>"}).join("");
+ }catch(e){
+  console.warn("tarot history",e);
+  box.innerHTML="<p class='muted'>Não foi possível carregar o histórico neste momento.</p>";
+ }
+}
+function showHistoryCard(code){
+ const c=byCode(code);if(!c)return;
+ const d=$("tarotHistoryDialog"),body=$("tarotHistoryDialogBody");if(!d||!body)return;
+ body.innerHTML="<div class='tarotHistoryDetail'><div class='tarotRevealedCard'><img src='"+cardImage(c)+"' alt='"+c.name+"'></div><div><span class='eyebrow'>TIRAGEM ANTERIOR</span><h2>"+c.name+"</h2><small>"+c.arcana+"</small><div class='tarotEnergy'><span>✦</span><div><small>ENERGIA</small><b>"+energyFor(c)+"</b></div></div><h3>Essência</h3><p>"+c.essence+".</p><h3>Conselho</h3><p>"+c.advice+"</p></div></div>";
+ d.showModal?d.showModal():d.setAttribute("open","");
+}
 function resetView(){
  $("tarotIntro")?.classList.remove("hidden");$("tarotDrawArea")?.classList.add("hidden");$("tarotResult")?.classList.add("hidden");
  if($("tarotCards"))$("tarotCards").innerHTML="";
@@ -125,7 +151,7 @@ async function choose(btn){
  }
 }
 document.addEventListener("click",async e=>{
- const nav=e.target.closest('.nav[data-view="tarotView"]');if(nav){setTimeout(restore,0);return}
+ const nav=e.target.closest('.nav[data-view="tarotView"]');if(nav){setTimeout(()=>{restore();loadHistory()},0);return}
  if(e.target.closest("#tarotStart")){openQuestion();return}
  if(e.target.closest("#tarotThought")){$("tarotThinkStep").classList.add("hidden");$("tarotConfirmStep").classList.remove("hidden");return}
  if(e.target.closest("#tarotNotYet")){$("tarotConfirmStep").classList.add("hidden");$("tarotThinkStep").classList.remove("hidden");return}
@@ -134,7 +160,9 @@ document.addEventListener("click",async e=>{
   $("tarotQuestionDialog")?.close();showCandidates(s.user.id);return
  }
  if(e.target.closest("#tarotClose")){$("tarotQuestionDialog")?.close();return}
+ if(e.target.closest("#tarotHistoryClose")){$("tarotHistoryDialog")?.close();return}
+ const hist=e.target.closest("[data-history-card]");if(hist){showHistoryCard(hist.dataset.historyCard);return}
  const pick=e.target.closest(".tarotPick");if(pick){choose(pick);return}
 });
-window.ASTRA_TAROT={deck:DECK,restore,candidates};
+window.ASTRA_TAROT={deck:DECK,restore,candidates,loadHistory};
 })();
