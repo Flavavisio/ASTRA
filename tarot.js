@@ -81,19 +81,54 @@ function renderHistoryLocked(){
  const box=$("tarotHistoryList");if(!box)return;
  box.innerHTML="<div class='tarotHistoryLock'><span>♕</span><div><b>Histórico Premium</b><p>Revê as cartas que te saíram nos dias anteriores com ASTRA Premium.</p></div><button class='primary' data-go-premium>Ver Premium ✦</button></div>";
 }
+function renderStatsLocked(){
+ const box=$("tarotStats");if(!box)return;
+ box.innerHTML="<div class='tarotHistoryLock'><span>♕</span><div><b>Estatísticas Premium</b><p>Descobre os padrões das tuas tiragens dos últimos 30 dias.</p></div><button class='primary' data-go-premium>Ver Premium ✦</button></div>";
+}
+function pct(n,total){return total?Math.round((n/total)*100):0}
+function localDateMinus(days){
+ const parts=lisbonDay().split("-").map(Number),d=new Date(Date.UTC(parts[0],parts[1]-1,parts[2]-days,12));
+ return d.toISOString().slice(0,10);
+}
+function renderStats(rows){
+ const box=$("tarotStats");if(!box)return;
+ const cutoff=localDateMinus(29),recent=(rows||[]).filter(r=>r.draw_date>=cutoff),cards=recent.map(r=>byCode(r.card_code)).filter(Boolean),total=cards.length;
+ if(!total){box.innerHTML="<div class='card tarotStatsEmpty'><span>✦</span><p>Faz algumas tiragens ao longo dos próximos dias para começares a ver os teus padrões pessoais.</p></div>";return}
+ const majorsCount=cards.filter(x=>x.code.startsWith("major-")).length,minorsCount=total-majorsCount;
+ const suitLabels={wands:"Paus",cups:"Copas",swords:"Espadas",coins:"Ouros"},suitIcons={wands:"🔥",cups:"💧",swords:"⚔️",coins:"🪙"};
+ const suitCounts={wands:0,cups:0,swords:0,coins:0};cards.forEach(x=>{const k=Object.keys(suitCounts).find(s=>x.code.startsWith(s+"-"));if(k)suitCounts[k]++});
+ const suitEntries=Object.entries(suitCounts).sort((a,b)=>b[1]-a[1]),topSuit=suitEntries[0][1]?suitEntries[0]:null;
+ const cardCounts={};cards.forEach(x=>cardCounts[x.code]=(cardCounts[x.code]||0)+1);
+ const topCardEntry=Object.entries(cardCounts).sort((a,b)=>b[1]-a[1])[0],topCard=byCode(topCardEntry[0]);
+ const energyCounts={};cards.forEach(x=>{const e=energyFor(x);energyCounts[e]=(energyCounts[e]||0)+1});
+ const topEnergy=Object.entries(energyCounts).sort((a,b)=>b[1]-a[1])[0];
+ box.innerHTML="<div class='tarotStatsGrid'>"+
+  "<div class='card tarotStatHero'><span>✦</span><small>TIRAGENS · 30 DIAS</small><b>"+total+"</b><p>Registos entre "+formatHistoryDate(cutoff)+" e hoje.</p></div>"+
+  "<div class='card tarotStatCard'><small>ENERGIA PREDOMINANTE</small><b>"+topEnergy[0]+"</b><p>"+topEnergy[1]+" de "+total+" tiragens</p></div>"+
+  "<div class='card tarotStatCard'><small>CARTA MAIS REPETIDA</small><b>"+topCard.name+"</b><p>"+topCardEntry[1]+" "+(topCardEntry[1]===1?"vez":"vezes")+"</p></div>"+
+  "<div class='card tarotStatCard'><small>ARCANOS</small><b>"+majorsCount+" Maiores · "+minorsCount+" Menores</b><p>"+pct(majorsCount,total)+"% das tiragens foram Arcanos Maiores.</p></div>"+
+ "</div>"+
+ "<div class='card tarotSuitStats'><div class='eyebrow'>DISTRIBUIÇÃO POR NAIPE</div><h3>"+(topSuit?suitIcons[topSuit[0]]+" "+suitLabels[topSuit[0]]+" em destaque":"Sem naipe dominante ainda")+"</h3>"+
+ Object.entries(suitCounts).map(([k,v])=>"<div class='tarotSuitRow'><span>"+suitIcons[k]+" "+suitLabels[k]+"</span><div><i style='width:"+pct(v,Math.max(1,minorsCount))+"%'></i></div><b>"+v+"</b></div>").join("")+
+ "<p class='tiny muted'>Estas estatísticas resumem apenas o teu histórico de tiragens; não representam probabilidades futuras nem previsões.</p></div>";
+}
 async function loadHistory(){
  const box=$("tarotHistoryList");if(!box)return;
  const premium=window.ASTRA_ENTITLEMENTS?.isPremium?.()||false;
- if(!premium){renderHistoryLocked();return}
+ if(!premium){renderHistoryLocked();renderStatsLocked();return}
  box.innerHTML="<p class='muted'>A carregar o teu histórico…</p>";
+ if($("tarotStats"))$("tarotStats").innerHTML="<p class='muted'>A analisar as tuas tiragens…</p>";
  try{
   const q=await sb.rpc("get_tarot_history",{p_limit:30});if(q.error)throw q.error;
   const rows=Array.isArray(q.data)?q.data:[];
+  let todayRow=null;try{const tq=await sb.rpc("get_today_tarot_draw");todayRow=Array.isArray(tq.data)?tq.data[0]:tq.data}catch(_){}
+  renderStats(todayRow?.card_code?[todayRow,...rows]:rows);
   if(!rows.length){box.innerHTML="<div class='card tarotHistoryEmpty'><span>☾</span><p>Ainda não tens tiragens anteriores. As tuas cartas começarão a aparecer aqui.</p></div>";return}
   box.innerHTML=rows.map(r=>{const c=byCode(r.card_code);if(!c)return "";return "<button class='tarotHistoryItem' data-history-card='"+c.code+"'><img src='"+cardImage(c)+"' alt=''><span><small>"+formatHistoryDate(r.draw_date)+"</small><b>"+c.name+"</b><em>"+energyFor(c)+"</em></span><i>›</i></button>"}).join("");
  }catch(e){
   console.warn("tarot history",e);
   box.innerHTML="<p class='muted'>Não foi possível carregar o histórico neste momento.</p>";
+  if($("tarotStats"))$("tarotStats").innerHTML="<p class='muted'>Não foi possível calcular as estatísticas neste momento.</p>";
  }
 }
 function showHistoryCard(code){
