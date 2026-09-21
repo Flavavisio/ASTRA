@@ -164,6 +164,49 @@ function openQuestion(){
  $("tarotThinkStep").classList.remove("hidden");$("tarotConfirmStep").classList.add("hidden");
  d.showModal?d.showModal():d.setAttribute("open","");
 }
+function spreadCards(uid){
+ const r=rng(hash32(uid+"|"+Date.now()+"|ASTRALIS-PPF")),pool=DECK.slice(),out=[];
+ while(out.length<3){const i=Math.floor(r()*pool.length);out.push(pool.splice(i,1)[0])}
+ return out;
+}
+function ppfMeaning(c,pos){
+ const intro={
+  past:"Esta carta representa simbolicamente o que vem do passado e ainda pode estar a influenciar a tua pergunta.",
+  present:"Esta carta representa simbolicamente a energia, contexto ou desafio mais presente na situação agora.",
+  future:"Esta carta representa uma tendência simbólica para onde a situação pode evoluir se o contexto e as escolhas atuais se mantiverem."
+ }[pos];
+ const close={
+  past:"Observa o que ainda trazes contigo e decide o que merece continuar.",
+  present:"Usa esta leitura para reconhecer o que pede atenção neste momento.",
+  future:"Vê esta carta como uma possibilidade de reflexão, não como um resultado inevitável."
+ }[pos];
+ return intro+" "+c.question+" "+close;
+}
+function showPremiumSpreadGate(){
+ const d=$("tarotPremiumGateDialog");if(!d)return;
+ d.showModal?d.showModal():d.setAttribute("open","");
+}
+async function openPastPresentFuture(){
+ let premium=window.ASTRA_ENTITLEMENTS?.isPremium?.()||false;
+ try{if(window.ASTRA_ENTITLEMENTS?.refresh)premium=await window.ASTRA_ENTITLEMENTS.refresh(sb)}catch(_){}
+ if(!premium){showPremiumSpreadGate();return}
+ const d=$("tarotSpreadQuestionDialog");if(!d)return;
+ $("tarotSpreadThink").classList.remove("hidden");$("tarotSpreadConfirm").classList.add("hidden");
+ d.showModal?d.showModal():d.setAttribute("open","");
+}
+async function revealPastPresentFuture(){
+ const s=(await sb.auth.getSession()).data?.session;if(!s){location.href="index.html";return}
+ const cards=spreadCards(s.user.id),positions=[
+  {key:"past",label:"PASSADO",icon:"◀"},
+  {key:"present",label:"PRESENTE",icon:"✦"},
+  {key:"future",label:"FUTURO",icon:"▶"}
+ ];
+ $("tarotSpreadQuestionDialog")?.close();
+ const wrap=$("tarotSpreadResult"),cardsWrap=$("tarotSpreadCards");if(!wrap||!cardsWrap)return;
+ wrap.classList.remove("hidden");cardsWrap.innerHTML=cards.map((c,i)=>"<article class='tarotSpreadCard' style='--spread-i:"+i+"'><div class='tarotSpreadPosition'><span>"+positions[i].icon+"</span><small>"+positions[i].label+"</small></div><div class='tarotSpreadImage'><img src='"+cardImage(c)+"' alt='"+c.name+"'></div><h3>"+c.name+"</h3><small>"+c.arcana+"</small><p>"+ppfMeaning(c,positions[i].key)+"</p><div class='tarotSpreadAdvice'><b>Conselho</b><span>"+c.advice+"</span></div></article>").join("");
+ wrap.scrollIntoView({behavior:"smooth",block:"start"});
+ try{navigator.vibrate?.([18,40,18])}catch(_){}
+}
 function showCandidates(uid){
  $("tarotIntro").classList.add("hidden");$("tarotResult").classList.add("hidden");$("tarotDrawArea").classList.remove("hidden");
  const cards=candidates(uid),wrap=$("tarotCards");
@@ -188,6 +231,13 @@ async function choose(btn){
 }
 document.addEventListener("click",async e=>{
  const nav=e.target.closest('.nav[data-view="tarotView"]');if(nav){setTimeout(()=>{restore();loadHistory()},0);return}
+ if(e.target.closest("#tarotSpreadStart")){openPastPresentFuture();return}
+ if(e.target.closest("#tarotPremiumGateClose")){$("tarotPremiumGateDialog")?.close();return}
+ if(e.target.closest("#tarotPremiumGateUpgrade")){$("tarotPremiumGateDialog")?.close();const b=document.querySelector('.nav[data-view="premiumView"]');window.ASTRA_SHOW_VIEW?.("premiumView",b);return}
+ if(e.target.closest("#tarotSpreadClose")){$("tarotSpreadQuestionDialog")?.close();return}
+ if(e.target.closest("#tarotSpreadThought")){$("tarotSpreadThink").classList.add("hidden");$("tarotSpreadConfirm").classList.remove("hidden");return}
+ if(e.target.closest("#tarotSpreadNotYet")){$("tarotSpreadConfirm").classList.add("hidden");$("tarotSpreadThink").classList.remove("hidden");return}
+ if(e.target.closest("#tarotSpreadYes")){revealPastPresentFuture();return}
  if(e.target.closest("#tarotStart")){openQuestion();return}
  if(e.target.closest("#tarotThought")){$("tarotThinkStep").classList.add("hidden");$("tarotConfirmStep").classList.remove("hidden");return}
  if(e.target.closest("#tarotNotYet")){$("tarotConfirmStep").classList.add("hidden");$("tarotThinkStep").classList.remove("hidden");return}
