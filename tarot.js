@@ -76,6 +76,19 @@ function energyFor(c){
  const x=(c.essence||"energia interior").split(",")[0].trim();return x.charAt(0).toUpperCase()+x.slice(1);
 }
 function setStatus(t){const x=$("tarotStatus");if(x)x.textContent=t||""}
+async function getDailyTarotAccess(){
+ try{
+  const q=await sb.rpc("get_tarot_daily_access");if(q.error)throw q.error;
+  return Array.isArray(q.data)?q.data[0]:q.data;
+ }catch(e){console.warn("tarot daily access",e);return null}
+}
+function updateDailyAccessNote(a){
+ const el=$("tarotAccessNote");if(!el)return;
+ if(!a){el.textContent="A verificar o acesso à tiragem diária…";return}
+ if(a.is_premium){el.textContent="Incluído no Astralis Premium · 1 tiragem por dia.";return}
+ if(a.trial_active){el.textContent="Período gratuito: "+a.days_left+" "+(a.days_left===1?"dia restante":"dias restantes")+" · 1 tiragem por dia.";return}
+ el.textContent="Os 7 dias gratuitos terminaram · Astralis Premium necessário.";
+}
 function formatHistoryDate(d){try{return new Intl.DateTimeFormat("pt-PT",{day:"2-digit",month:"short",year:"numeric",timeZone:"Europe/Lisbon"}).format(new Date(d+"T12:00:00"))}catch(_){return d}}
 function renderHistoryLocked(){
  const box=$("tarotHistoryList");if(!box)return;
@@ -153,6 +166,7 @@ function renderSaved(c){
 async function restore(){
  try{
   const s=(await sb.auth.getSession()).data?.session;if(!s)return;
+  const access=await getDailyTarotAccess();updateDailyAccessNote(access);
   const q=await sb.rpc("get_today_tarot_draw");if(q.error)throw q.error;
   const row=Array.isArray(q.data)?q.data[0]:q.data;
   if(row?.card_code){const c=byCode(row.card_code);if(c){renderSaved(c);return}}
@@ -182,8 +196,10 @@ function ppfMeaning(c,pos){
  }[pos];
  return intro+" "+c.question+" "+close;
 }
-function showPremiumSpreadGate(){
+function showPremiumSpreadGate(title="Esta tiragem é exclusiva Premium",text="A tiragem Passado · Presente · Futuro está disponível para contas Astralis Premium."){
  const d=$("tarotPremiumGateDialog");if(!d)return;
+ if($("tarotPremiumGateTitle"))$("tarotPremiumGateTitle").textContent=title;
+ if($("tarotPremiumGateText"))$("tarotPremiumGateText").textContent=text;
  d.showModal?d.showModal():d.setAttribute("open","");
 }
 async function openPastPresentFuture(){
@@ -238,7 +254,11 @@ document.addEventListener("click",async e=>{
  if(e.target.closest("#tarotSpreadThought")){$("tarotSpreadThink").classList.add("hidden");$("tarotSpreadConfirm").classList.remove("hidden");return}
  if(e.target.closest("#tarotSpreadNotYet")){$("tarotSpreadConfirm").classList.add("hidden");$("tarotSpreadThink").classList.remove("hidden");return}
  if(e.target.closest("#tarotSpreadYes")){revealPastPresentFuture();return}
- if(e.target.closest("#tarotStart")){openQuestion();return}
+ if(e.target.closest("#tarotStart")){
+  const access=await getDailyTarotAccess();updateDailyAccessNote(access);
+  if(!access?.allowed){showPremiumSpreadGate("Astralis Premium necessário","Os 7 dias gratuitos da tiragem diária terminaram. Para continuares a fazer uma tiragem por dia, precisas de uma conta Astralis Premium.");return}
+  openQuestion();return
+ }
  if(e.target.closest("#tarotThought")){$("tarotThinkStep").classList.add("hidden");$("tarotConfirmStep").classList.remove("hidden");return}
  if(e.target.closest("#tarotNotYet")){$("tarotConfirmStep").classList.add("hidden");$("tarotThinkStep").classList.remove("hidden");return}
  if(e.target.closest("#tarotYes")){
