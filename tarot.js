@@ -67,6 +67,14 @@ function hash32(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(
 function rng(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 function candidates(uid){const r=rng(hash32(uid+"|"+lisbonDay()+"|ASTRA-TAROT")),pool=DECK.slice(),out=[];while(out.length<3){const i=Math.floor(r()*pool.length);out.push(pool.splice(i,1)[0])}return out}
 function cardImage(c){return IMG+c.file}
+function tarotDate(){return new Intl.DateTimeFormat("pt-PT",{timeZone:"Europe/Lisbon",weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date())}
+function energyFor(c){
+ if(c.code.startsWith("wands-"))return "Ação e iniciativa";
+ if(c.code.startsWith("cups-"))return "Emoção e ligação";
+ if(c.code.startsWith("swords-"))return "Clareza e decisão";
+ if(c.code.startsWith("coins-"))return "Estabilidade e construção";
+ const x=(c.essence||"energia interior").split(",")[0].trim();return x.charAt(0).toUpperCase()+x.slice(1);
+}
 function setStatus(t){const x=$("tarotStatus");if(x)x.textContent=t||""}
 function resetView(){
  $("tarotIntro")?.classList.remove("hidden");$("tarotDrawArea")?.classList.add("hidden");$("tarotResult")?.classList.add("hidden");
@@ -77,8 +85,8 @@ function renderSaved(c){
  if(!c)return;
  $("tarotIntro")?.classList.add("hidden");$("tarotDrawArea")?.classList.add("hidden");
  const r=$("tarotResult");r.classList.remove("hidden");
- r.innerHTML="<div class='tarotRevealWrap'><div class='tarotRevealedCard'><img src='"+cardImage(c)+"' alt='"+c.name+"'></div><div class='tarotMeaning'><span class='eyebrow'>A TUA CARTA DE HOJE</span><h2>"+c.name+"</h2><small>"+c.arcana+"</small><h3>Essência</h3><p>"+c.essence+".</p><h3>Na tua pergunta</h3><p>"+c.question+"</p><h3>Conselho</h3><p>"+c.advice+"</p><p class='tiny muted'>O Tarot ASTRA é uma ferramenta de reflexão e entretenimento. Não determina acontecimentos futuros nem substitui aconselhamento profissional.</p></div></div>";
- setStatus("A tua tiragem de hoje já está revelada. Amanhã poderás fazer uma nova.");
+ r.innerHTML="<div class='tarotResultHead'><span class='eyebrow'>A TUA CARTA DE HOJE</span><span class='tarotResultDate'>"+tarotDate()+"</span></div><div class='tarotRevealWrap'><div class='tarotRevealedCard tarotResultCard'><span class='tarotCardGlow'></span><img src='"+cardImage(c)+"' alt='"+c.name+"'></div><div class='tarotMeaning'><h2>"+c.name+"</h2><small>"+c.arcana+"</small><div class='tarotEnergy'><span>✦</span><div><small>ENERGIA DOMINANTE DO DIA</small><b>"+energyFor(c)+"</b></div></div><div class='tarotReadingBlock'><h3>Essência</h3><p>"+c.essence+".</p></div><div class='tarotReadingBlock'><h3>O que isto diz sobre a tua pergunta</h3><p>"+c.question+"</p></div><div class='tarotReadingBlock'><h3>Conselho prático para hoje</h3><p>"+c.advice+"</p></div><div class='tarotTomorrow'><span>☾</span><div><b>Tiragem concluída</b><small>Volta amanhã para uma nova carta.</small></div></div><p class='tiny muted'>O Tarot ASTRA é uma ferramenta de reflexão e entretenimento. Não determina acontecimentos futuros nem substitui aconselhamento profissional.</p></div></div>";
+ setStatus("A tua tiragem diária está guardada.");
 }
 async function restore(){
  try{
@@ -109,8 +117,8 @@ async function choose(btn){
   const q=await sb.rpc("claim_tarot_draw",{p_card_code:code});if(q.error)throw q.error;
   const row=Array.isArray(q.data)?q.data[0]:q.data,actual=byCode(row?.card_code)||c;
   if(actual.code!==code){renderSaved(actual);return}
-  btn.classList.add("revealed");document.querySelectorAll(".tarotPick").forEach(x=>{if(x!==btn)x.classList.add("notChosen")});
-  setTimeout(()=>renderSaved(actual),1150);
+  try{navigator.vibrate?.([22,35,22])}catch(_){} btn.classList.add("revealed","tarotChosen");document.querySelectorAll(".tarotPick").forEach(x=>{if(x!==btn)x.classList.add("notChosen")});
+  setStatus("A tua carta escolheu revelar-se…");setTimeout(()=>renderSaved(actual),1450);
  }catch(e){
   console.error("tarot draw",e);document.querySelectorAll(".tarotPick").forEach(x=>{x.disabled=false;x.dataset.busy="0"});
   setStatus("Não foi possível guardar a tiragem. Tenta novamente.");
