@@ -1,6 +1,6 @@
 {
-  "name": "ASTRA — O teu dia nos astros",
-  "short_name": "ASTRA",
+  "name": "Astralis — Os teus astros. As tuas cartas. O teu caminho.",
+  "short_name": "Astralis",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#170c24",
